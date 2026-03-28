@@ -1,0 +1,139 @@
+:root {
+    --color-9: rgb(14, 15, 17);
+    --color-8: rgb(26, 27, 30);
+    --color-7: rgb(35, 36, 40);
+    --color-6: rgb(43, 45, 49);
+    --color-5: rgb(49, 51, 56);
+    --color-4: rgb(56, 58, 64);
+    --color-3: rgb(64, 66, 73);
+    --color-modal: rgb(43, 45, 49);
+
+    --principal: rgb(88, 101, 242);
+    --principal-hover: rgb(71, 82, 196);
+    --principal-claro: rgb(114, 137, 218);
+    --principal-dim: rgba(88, 101, 242, 0.15);
+
+    --status-received: rgb(88, 101, 242);
+    --status-read: rgb(59, 165, 92);
+    --status-approved: rgb(45, 125, 70);
+    --status-rejected: rgb(237, 66, 69);
+    --status-pending: rgb(250, 166, 26);
+
+    --rol-autoridad: rgb(244, 127, 255);
+    --rol-gerente: rgb(250, 166, 26);
+    --rol-operativo: rgb(59, 165, 92);
+
+    --text-prima: rgb(242, 243, 245);
+    --text-secon: rgb(181, 186, 193);
+    --text-muted: rgb(128, 132, 142);
+    --text-link: rgb(0, 175, 244);
+    --text-danger: rgb(237, 66, 69);
+    --text-suc: rgb(59, 165, 92);
+    --text-war: rgb(250, 166, 26);
+
+    --borde: rgba(255, 255, 255, 0.06);
+    --borde-strong: rgba(255, 255, 255, 0.12);
+
+    --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --sombra-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --sombra-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+    --sombra-modal: 0 16px 48px rgba(0, 0, 0, 0.7);
+
+    --font-main: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-mono: 'Consolas', 'Andale Mono WT', 'Andale Mono', monospace;
+
+    --text-xs: 11px;
+    --text-sm: 12px;
+    --text-base: 14px;
+    --text-md: 16px;
+    --text-lg: 20px;
+    --text-xl: 24px;
+
+    --weight-normal: 400;
+    --weight-medium: 500;
+    --weight-bold: 600;
+    --weight-xbold: 700;
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 32px;
+    --space-8: 48px;
+
+    --radio-sm: 4px;
+    --radio-md: 8px;
+    --radio-lg: 12px;
+    --radio-xl: 16px;
+    --radio-full: 9999px;
+
+    --transition-fast: 100ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+
+    --side-guilds: 72px;
+    --side-channels: 240px;
+
+    --top-height: 48px;
+    --input-height: 44px;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body{
+    height: 100%;
+    font-family: var(--font-main);
+    font-size: var(--text-base);
+    color: var(--text-prima);
+    background-color: var(--color-9);
+    -webkit-font-smoothing: antialiased;
+}
+
+a{
+    color: var(--text-link);
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+button{
+    font-family: var(--font-main);
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+input, textarea, select{
+    font-family: var(--font-main);
+    outline: none;
+    border: none;
+}
+
+ul, ol{
+    list-style: none;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb{
+    background: var(--color-9);
+    border-radius: var(--radio-full);
+    border: 2px solid  var(--color-7);
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background: var(--color-4);
+}
