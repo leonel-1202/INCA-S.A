@@ -29,7 +29,8 @@ export async function login(req, res) {
             avatar: usuario.avatar,
             colorRol: usuario.colorRol,
             canSendTo: usuario.canSendTo,
-            canApprove: usuario.canApprove
+            canApprove: usuario.canApprove,
+            canApproveFrom:  usuario.canApproveFrom ?? []
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });

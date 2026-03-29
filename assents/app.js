@@ -1,5 +1,4 @@
 import { requiereAuth, getSesion, logout as logoutService } from './services/auth.service.js';
-import { getUserById } from './data/users.js';
 import { renderSidebar } from './components/sidebar.js';
 import { renderInbox } from './components/inbox.js';
 import { initCompose } from './components/compose.js';
@@ -11,15 +10,14 @@ export const App = {
 
 document.addEventListener('DOMContentLoaded', async () => {
     requiereAuth();
-    await cargarUsuario();
+    cargarUsuario();
     await inicializarUI();
 });
 
-async function cargarUsuario() {
+function cargarUsuario() {
     const sesion = getSesion();
     if (!sesion) return;
-    const usuarioCompleto = getUserById(sesion.id);
-    App.usuario = usuarioCompleto || sesion;
+    App.usuario = sesion;
 }
 
 async function inicializarUI() {
@@ -31,9 +29,9 @@ async function inicializarUI() {
 
 function actualizarTitulo() {
     const titulos = {
-        inbox: 'Bandeja de Entrada',
+        inbox:    'Bandeja de Entrada',
         enviados: 'Enviados',
-        detalle: 'Detalle de Mensaje'
+        detalle:  'Detalle de Mensaje'
     };
     const el = document.getElementById('vistaTitulo');
     if (el) el.textContent = titulos[App.vista] ?? 'Bandeja de Entrada';
@@ -58,9 +56,9 @@ export function cambiarVista(vista) {
 
 function actualizarTopIcon(vista) {
     const iconos = {
-        inbox: '📥',
+        inbox:    '📥',
         enviados: '📤',
-        detalle: '📄'
+        detalle:  '📄'
     };
     const el = document.querySelector('.top-icon');
     if (el) el.textContent = iconos[vista] ?? '📥';

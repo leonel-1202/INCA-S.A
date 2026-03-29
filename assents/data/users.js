@@ -9,10 +9,15 @@ export const USUARIOS = [
         reportaA: null,
         canSendTo: ["*"],
         canApprove: true,
+        canApproveFrom: [
+            "asesoria-legal",
+            "asesoria-comercial",
+            "gerente-general",
+            "gerente-sucursal"
+        ],
         avatar: "P",
         colorRol: "var(--rol-autoridad)"
     },
-
     {
         id: "asesoria-legal",
         nombre: "Asesoría Legal",
@@ -23,10 +28,10 @@ export const USUARIOS = [
         reportaA: "presidente",
         canSendTo: ["presidente"],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "AL",
         colorRol: "var(--rol-gerente)"
     },
-
     {
         id: "asesoria-comercial",
         nombre: "Asesoría Comercial",
@@ -37,10 +42,10 @@ export const USUARIOS = [
         reportaA: "presidente",
         canSendTo: ["presidente"],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "AC",
         colorRol: "var(--rol-gerente)"
     },
-
     {
         id: "gerente-general",
         nombre: "Gerente General",
@@ -56,11 +61,17 @@ export const USUARIOS = [
             "sector-finanzas",
             "depto-compras"
         ],
-        canApprove: false,
+        canApprove: true,
+        canApproveFrom: [
+            "gerente-administrativo",
+            "gerente-logistica",
+            "gerente-sucursal",
+            "sector-finanzas",
+            "depto-compras"
+        ],
         avatar: "GG",
         colorRol: "var(--rol-gerente)"
     },
-
     {
         id: "gerente-administrativo",
         nombre: "Gerente Administrativo",
@@ -75,11 +86,15 @@ export const USUARIOS = [
             "sector-finanzas",
             "depto-compras"
         ],
-        canApprove: false,
+        canApprove: true,
+        canApproveFrom: [
+            "sector-personal",
+            "sector-finanzas",
+            "depto-compras"
+        ],
         avatar: "GA",
         colorRol: "var(--rol-gerente)"
     },
-
     {
         id: "gerente-logistica",
         nombre: "Gerente de Logística y Operaciones",
@@ -94,11 +109,15 @@ export const USUARIOS = [
             "ventas",
             "deposito"
         ],
-        canApprove: false,
+        canApprove: true,
+        canApproveFrom: [
+            "depto-compras",
+            "ventas",
+            "deposito"
+        ],
         avatar: "GL",
         colorRol: "var(--rol-gerente)"
     },
-
     {
         id: "sector-personal",
         nombre: "Sector de Personal",
@@ -112,10 +131,10 @@ export const USUARIOS = [
             "sector-finanzas"
         ],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "SP",
         colorRol: "var(--rol-operativo)"
     },
-
     {
         id: "sector-finanzas",
         nombre: "Sector Financiero",
@@ -129,10 +148,10 @@ export const USUARIOS = [
             "gerente-general"
         ],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "SF",
         colorRol: "var(--rol-operativo)"
     },
-
     {
         id: "depto-compras",
         nombre: "Departamento de Compras",
@@ -147,10 +166,10 @@ export const USUARIOS = [
             "sector-finanzas"
         ],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "DC",
         colorRol: "var(--rol-operativo)"
     },
-
     {
         id: "ventas",
         nombre: "Sector de Ventas",
@@ -164,10 +183,10 @@ export const USUARIOS = [
             "deposito"
         ],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "SV",
         colorRol: "var(--rol-operativo)"
     },
-
     {
         id: "deposito",
         nombre: "Sector de Depósito",
@@ -181,10 +200,10 @@ export const USUARIOS = [
             "ventas"
         ],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "SD",
         colorRol: "var(--rol-operativo)"
     },
-
     {
         id: "admin-sucursal",
         nombre: "Administración de Sucursal",
@@ -198,32 +217,35 @@ export const USUARIOS = [
             "sector-finanzas"
         ],
         canApprove: false,
+        canApproveFrom: [],
         avatar: "AS",
         colorRol: "var(--rol-operativo)"
     },
-
     {
         id: "gerente-sucursal",
         nombre: "Gerente de Sucursal",
         area: "Sucursal",
         cargo: "Gerente de Sucursal",
         rol: "gerente",
-        password: "inca_gsucursal",
+        password: "inca_sucursal",
         reportaA: "gerente-general",
         canSendTo: [
             "gerente-general",
             "presidente",
             "sector-finanzas"
         ],
-        canApprove: false,
+        canApprove: true,
+        canApproveFrom: [
+            "admin-sucursal"
+        ],
         avatar: "GS",
         colorRol: "var(--rol-gerente)"
     }
 ];
 
 export const EXTERNOS = [
-    { id: "afip", nombre: "AFIP", avatar: "AF" },
-    { id: "anses", nombre: "ANSES", avatar: "AN" },
+    { id: "afip",nombre: "AFIP",avatar: "AF" },
+    { id: "anses",nombre: "ANSES",avatar: "AN" },
     { id: "printergraf", nombre: "PrinterGraf", avatar: "PG" },
     { id: "porvenir-sa", nombre: "Porvenir SA", avatar: "PS" }
 ];
@@ -247,4 +269,9 @@ export function getNombreById(id) {
     const externo = EXTERNOS.find(e => e.id === id);
     if (externo) return externo.nombre;
     return id;
+}
+
+export function puedeAprobarMensaje(usuario, remitenteId) {
+    if (!usuario.canApprove) return false;
+    return usuario.canApproveFrom?.includes(remitenteId) ?? false;
 }

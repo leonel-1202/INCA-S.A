@@ -10,6 +10,7 @@ const UsuarioSchema = new mongoose.Schema({
     reportaA: { type: String, default: null },
     canSendTo: { type: [String], default: [] },
     canApprove: { type: Boolean, default: false },
+    canApproveFrom: { type: [String], default: [] },
     avatar: { type: String, required: true },
     colorRol: { type: String, required: true }
 }, { timestamps: true });
