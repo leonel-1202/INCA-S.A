@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import './env.js';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -6,20 +6,21 @@ import { conectarDB } from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import mensajeRoutes from './routes/mensaje.routes.js';
 import documentoRoutes from './routes/documento.routes.js';
+import notificacionRoutes from './routes/notificacion.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname  = path.dirname(__filename);
 
-const app = express();
+const app  = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-
 app.use(express.static(path.join(__dirname, '..')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/mensajes', mensajeRoutes);
 app.use('/api/documentos', documentoRoutes);
+app.use('/api/notificaciones', notificacionRoutes);
 
 app.get('/{*splat}', (req, res) => {
     if (!req.path.startsWith('/api')) {

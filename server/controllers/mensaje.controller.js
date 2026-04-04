@@ -1,4 +1,6 @@
 import Mensaje from '../models/Mensaje.js';
+import Usuario from '../models/Usuario.js';
+
 
 export async function getRecibidos(req, res) {
     try {
@@ -36,15 +38,20 @@ export async function enviar(req, res) {
     }
 
     try {
+        const destinatario = await Usuario.findOne({ id: para });
+        const requiereAprobacion = destinatario?.canApprove === true
+            && destinatario?.canApproveFrom?.includes(req.usuario.id);
+
         const nuevo = await Mensaje.create({
             de: req.usuario.id,
             para,
             asunto,
             cuerpo,
             adjuntos: adjuntos || [],
-            estado: 'recibido',
+            estado: requiereAprobacion ? 'pendiente' : 'recibido',
             leido: false
         });
+
         res.status(201).json({ ok: true, data: nuevo });
     } catch (error) {
         res.status(500).json({ ok: false, error: 'Error al enviar el mensaje.' });

@@ -332,7 +332,6 @@
     padding: var(--space-4);
 }
 
-/* ← Ya estaba, se mantiene */
 .modal-over[hidden] {
     display: none;
 }
@@ -466,4 +465,43 @@
 .btn-secundario:hover {
     background-color: var(--color-4);
     color: var(--text-prima);
+}
+
+.filtros-grupo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background-color: var(--color-4);
+    border-radius: var(--radio-md);
+    padding: 3px;
+}
+
+.btn-filtro {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radio-sm);
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn-filtro:hover {
+    background-color: var(--color-3);
+    color: var(--text-secon);
+}
+
+.btn-filtro.activo {
+    background-color: var(--color-6);
+    color: var(--text-prima);
+}
+
+.filtros-grupo[hidden] {
+    display: none;
 }

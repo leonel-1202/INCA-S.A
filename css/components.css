@@ -352,3 +352,196 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.perfil-acciones {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.btn-notificaciones {
+    position: relative;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: var(--space-1);
+    border-radius: var(--radio-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.btn-notificaciones:hover {
+    color: var(--text-prima);
+}
+
+.badge-notificaciones {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: var(--status-rejected);
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: var(--weight-bold);
+    min-width: 14px;
+    height: 14px;
+    border-radius: var(--radio-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+}
+
+.badge-notificaciones[hidden] {
+    display: none;
+}
+
+.panel-notificaciones {
+    position: absolute;
+    bottom: 60px;
+    left: var(--space-2);
+    width: 320px;
+    background-color: var(--color-6);
+    border: 1px solid var(--borde-strong);
+    border-radius: var(--radio-lg);
+    box-shadow: var(--sombra-lg);
+    z-index: 200;
+    overflow: hidden;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-notificaciones[hidden] {
+    display: none;
+}
+
+.notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--borde);
+    flex-shrink: 0;
+}
+
+.notif-titulo {
+    color: var(--text-prima);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+}
+
+.notif-marcar-todas {
+    background: none;
+    border: none;
+    color: var(--principal-claro);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    padding: 0;
+}
+
+.notif-marcar-todas:hover {
+    text-decoration: underline;
+}
+
+.notif-lista {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--borde);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    position: relative;
+}
+
+.notif-item:hover {
+    background-color: var(--color-5);
+}
+
+.notif-item.leida {
+    opacity: 0.6;
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+}
+
+.notif-icono {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: var(--radio-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.notif-aprobado {
+    background-color: rgba(59, 165, 92, 0.15);
+    color: var(--status-read);
+}
+
+.notif-rechazado {
+    background-color: rgba(237, 66, 69, 0.15);
+    color: var(--status-rejected);
+}
+
+.notif-contenido {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-texto {
+    color: var(--text-secon);
+    font-size: var(--text-sm);
+    line-height: 1.4;
+}
+
+.notif-texto strong {
+    color: var(--text-prima);
+}
+
+.notif-texto em {
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+.notif-fecha {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    margin-top: var(--space-1);
+}
+
+.notif-punto {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    border-radius: var(--radio-full);
+    background-color: var(--principal);
+    margin-top: 6px;
+}
+
+.notif-vacio {
+    padding: var(--space-6);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+}
+
+.notif-cargando {
+    padding: var(--space-4);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+}

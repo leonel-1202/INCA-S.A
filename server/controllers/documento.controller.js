@@ -1,12 +1,12 @@
 import Mensaje from '../models/Mensaje.js';
 import Historial from '../models/Historial.js';
+import Notificacion from '../models/Notificacion.js';
 
 async function cambiarEstadoConHistorial(mensajeId, nuevoEstado, autorId, nota = '') {
     const mensaje = await Mensaje.findById(mensajeId);
     if (!mensaje) return null;
 
     const estadoAntes = mensaje.estado;
-
     mensaje.estado = nuevoEstado;
     await mensaje.save();
 
@@ -17,6 +17,16 @@ async function cambiarEstadoConHistorial(mensajeId, nuevoEstado, autorId, nota =
         estadoDespues: nuevoEstado,
         nota
     });
+
+    if (nuevoEstado === 'aprobado' || nuevoEstado === 'rechazado') {
+        await Notificacion.create({
+            para: mensaje.de,
+            de: autorId,
+            mensajeId: mensaje._id,
+            asunto: mensaje.asunto,
+            tipo: nuevoEstado
+        });
+    }
 
     return { mensaje, evento };
 }

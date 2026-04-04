@@ -1,5 +1,7 @@
 import { cambiarVista, logout } from '../app.js';
 import { getNoLeidosCount } from '../services/message.service.js';
+import { initNotificaciones,
+        actualizarBadgeNotificaciones } from './notificaciones.js';
 
 const Nav_Items = [
     {
@@ -14,16 +16,16 @@ const Nav_Items = [
     }
 ];
 
-export function renderSidebar(usuario) {
+export async function renderSidebar(usuario) {
     renderAreaIcon(usuario);
     renderNav(usuario);
     renderPerfil(usuario);
+    await initNotificaciones(usuario);
 }
 
 function renderAreaIcon(usuario) {
     const contenedor = document.getElementById('sidebarAreas');
     if (!contenedor) return;
-
     contenedor.innerHTML = '';
 
     const icono = document.createElement('div');
@@ -40,7 +42,6 @@ function renderAreaIcon(usuario) {
 function renderNav(usuario) {
     const contenedor = document.getElementById('sidebarNav');
     if (!contenedor) return;
-
     contenedor.innerHTML = '';
 
     const label = document.createElement('div');
@@ -53,11 +54,8 @@ function renderNav(usuario) {
         el.className = 'sidebar-item';
         el.dataset.vista = item.vista;
         el.innerHTML = `${item.icono}<span>${item.label}</span>`;
-
         if (item.vista === 'inbox') el.classList.add('activo');
-
         el.addEventListener('click', () => cambiarVista(item.vista));
-
         contenedor.appendChild(el);
     });
 
@@ -76,13 +74,25 @@ function renderPerfil(usuario) {
             <div class="perfil-nombre">${usuario.nombre}</div>
             <div class="perfil-rol" style="color: ${usuario.colorRol}">${capitalizarRol(usuario.rol)}</div>
         </div>
-        <button class="btn-logout" id="btnLogout" title="Cerrar sesión">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-        </button>
+        <div class="perfil-acciones">
+            <button class="btn-notificaciones" id="btnNotificaciones" title="Notificaciones">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="badge-notificaciones" id="badgeNotificaciones" hidden>0</span>
+            </button>
+            <button class="btn-logout" id="btnLogout" title="Cerrar sesión">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Panel de notificaciones -->
+        <div class="panel-notificaciones" id="panelNotificaciones" hidden></div>
     `;
 
     document.getElementById('btnLogout').addEventListener('click', logout);
@@ -91,10 +101,8 @@ function renderPerfil(usuario) {
 async function actualizarBadgeInbox() {
     const noLeidos = await getNoLeidosCount();
     if (noLeidos === 0) return;
-
     const itemInbox = document.querySelector('[data-vista="inbox"]');
     if (!itemInbox) return;
-
     const badge = document.createElement('span');
     badge.className = 'sidebar-badge';
     badge.textContent = noLeidos > 9 ? '9+' : noLeidos;

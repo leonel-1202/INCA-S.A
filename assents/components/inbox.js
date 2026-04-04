@@ -1,11 +1,13 @@
-import { getNombreById, puedeAprobarMensaje }  from '../data/users.js';
+import { getNombreById, puedeAprobarMensaje } from '../data/users.js';
 import { getRecibidos, getEnviados,
-        getMensajeById, marcarLeido }          from '../services/message.service.js';
+        getMensajeById, marcarLeido } from '../services/message.service.js';
 import { aprobar, rechazar,
-        getHistorialFormateado }               from '../services/document.service.js';
-import { renderBadge }                          from './statusBadge.js';
-import { cambiarVista }                         from '../app.js';
-import { refrescarBadge }                       from './sidebar.js';
+        getHistorialFormateado } from '../services/document.service.js';
+import { renderBadge } from './statusBadge.js';
+import { cambiarVista } from '../app.js';
+import { refrescarBadge } from './sidebar.js';
+
+let filtroActivo = 'todos';
 
 export async function renderInbox(usuario) {
     await renderBandeja(usuario);
@@ -16,15 +18,58 @@ async function renderBandeja(usuario) {
     const contenedor = document.getElementById('listaMensaje');
     if (!contenedor) return;
     contenedor.innerHTML = renderCargando();
+
     const mensajes = await getRecibidos();
-    if (mensajes.length === 0) {
-        contenedor.innerHTML = renderVacio('No hay mensajes en tu bandeja.');
+
+    bindFiltros(usuario, mensajes);
+    aplicarFiltro(usuario, mensajes, filtroActivo);
+}
+
+function bindFiltros(usuario, mensajes) {
+    document.querySelectorAll('.btn-filtro').forEach(btn => {
+        const nuevo = btn.cloneNode(true);
+        btn.parentNode.replaceChild(nuevo, btn);
+    });
+
+    document.querySelectorAll('.btn-filtro').forEach(btn => {
+        btn.addEventListener('click', () => {
+            filtroActivo = btn.dataset.filtro;
+            document.querySelectorAll('.btn-filtro').forEach(b =>
+                b.classList.toggle('activo', b.dataset.filtro === filtroActivo)
+            );
+            aplicarFiltro(usuario, mensajes, filtroActivo);
+        });
+    });
+
+    document.querySelectorAll('.btn-filtro').forEach(b =>
+        b.classList.toggle('activo', b.dataset.filtro === filtroActivo)
+    );
+}
+
+function aplicarFiltro(usuario, mensajes, filtro) {
+    const contenedor = document.getElementById('listaMensaje');
+    if (!contenedor) return;
+
+    let filtrados = mensajes;
+
+    if (filtro === 'pendientes') {
+        filtrados = mensajes.filter(m => m.estado === 'pendiente' || m.estado === 'recibido');
+    } else if (filtro === 'aprobados') {
+        filtrados = mensajes.filter(m => m.estado === 'aprobado');
+    } else if (filtro === 'rechazados') {
+        filtrados = mensajes.filter(m => m.estado === 'rechazado');
+    }
+
+    if (filtrados.length === 0) {
+        contenedor.innerHTML = renderVacio('No hay mensajes con ese filtro.');
         return;
     }
-    contenedor.innerHTML = mensajes
+
+    contenedor.innerHTML = filtrados
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map(m => renderTarjetaMensaje(m, 'inbox'))
         .join('');
+
     contenedor.querySelectorAll('.mensaje-card').forEach(card => {
         card.addEventListener('click', () => abrirDetalle(card.dataset.id, usuario));
     });
@@ -35,14 +80,17 @@ async function renderEnviados(usuario) {
     if (!contenedor) return;
     contenedor.innerHTML = renderCargando();
     const mensajes = await getEnviados();
+
     if (mensajes.length === 0) {
         contenedor.innerHTML = renderVacio('No has enviado ningún mensaje.');
         return;
     }
+
     contenedor.innerHTML = mensajes
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map(m => renderTarjetaMensaje(m, 'enviados'))
         .join('');
+
     contenedor.querySelectorAll('.mensaje-card').forEach(card => {
         card.addEventListener('click', () => abrirDetalle(card.dataset.id, usuario, false));
     });
@@ -176,7 +224,7 @@ async function manejarAprobacion(mensajeId, usuario, accion) {
         : await rechazar(mensajeId);
 
     if (!resultado) {
-        if (btnAprobar)  btnAprobar.disabled  = false;
+        if (btnAprobar) btnAprobar.disabled  = false;
         if (btnRechazar) btnRechazar.disabled = false;
         return;
     }
@@ -236,13 +284,13 @@ function formatearFecha(fecha) {
 }
 
 function formatearFechaCorta(fecha) {
-    const diff    = Date.now() - new Date(fecha).getTime();
+    const diff = Date.now() - new Date(fecha).getTime();
     const minutos = Math.floor(diff / 60_000);
-    const horas   = Math.floor(diff / 3_600_000);
-    const dias    = Math.floor(diff / 86_400_000);
-    if (minutos < 1)  return 'Ahora';
+    const horas = Math.floor(diff / 3_600_000);
+    const dias = Math.floor(diff / 86_400_000);
+    if (minutos < 1) return 'Ahora';
     if (minutos < 60) return `${minutos}m`;
-    if (horas < 24)   return `${horas}h`;
+    if (horas < 24) return `${horas}h`;
     return `${dias}d`;
 }
 

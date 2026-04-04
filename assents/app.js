@@ -29,9 +29,9 @@ async function inicializarUI() {
 
 function actualizarTitulo() {
     const titulos = {
-        inbox:    'Bandeja de Entrada',
+        inbox: 'Bandeja de Entrada',
         enviados: 'Enviados',
-        detalle:  'Detalle de Mensaje'
+        detalle: 'Detalle de Mensaje'
     };
     const el = document.getElementById('vistaTitulo');
     if (el) el.textContent = titulos[App.vista] ?? 'Bandeja de Entrada';
@@ -41,6 +41,7 @@ export function cambiarVista(vista) {
     App.vista = vista;
     actualizarTitulo();
     actualizarTopIcon(vista);
+    actualizarFiltros(vista);
 
     document.querySelectorAll('.vista-seccion').forEach(sec => {
         sec.hidden = true;
@@ -56,12 +57,17 @@ export function cambiarVista(vista) {
 
 function actualizarTopIcon(vista) {
     const iconos = {
-        inbox:    '📥',
+        inbox: '📥',
         enviados: '📤',
-        detalle:  '📄'
+        detalle: '📄'
     };
     const el = document.querySelector('.top-icon');
     if (el) el.textContent = iconos[vista] ?? '📥';
+}
+
+function actualizarFiltros(vista) {
+    const filtros = document.getElementById('filtrosGrupo');
+    if (filtros) filtros.hidden = vista !== 'inbox';
 }
 
 export function logout() {
