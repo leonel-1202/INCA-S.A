@@ -12,7 +12,7 @@ router.use(verificarToken);
 
 router.get('/', getMisNotificaciones);
 router.get('/count', getNoLeidasCount);
-router.patch('/:id/leida', marcarLeida);
 router.patch('/leidas/todas', marcarTodasLeidas);
+router.patch('/:id/leida', marcarLeida);
 
 export default router;

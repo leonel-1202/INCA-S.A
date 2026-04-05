@@ -545,3 +545,49 @@
     color: var(--text-muted);
     font-size: var(--text-sm);
 }
+
+.modal-acciones .btn-login {
+    width: auto;
+    height: var(--input-height);
+    background-color: var(--principal);
+    color: #ffffff;
+    border: none;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radio-md);
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.modal-acciones .btn-login:hover {
+    background-color: var(--principal-hover);
+    transform: translateY(-1px);
+}
+
+.modal-form .form-select,
+.modal-form .form-input {
+    background-color: var(--color-7) !important;
+    border: 1px solid var(--borde-strong) !important;
+    border-radius: var(--radio-md) !important;
+    color: var(--text-prima) !important;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.modal-form .form-textarea {
+    background-color: var(--color-7) !important;
+    border: 1px solid var(--borde-strong) !important;
+    color: var(--text-prima) !important;
+}
+
+.modal-form .form-select option {
+    background-color: var(--color-6);
+    color: var(--text-prima);
+}
+
+.modal-form .form-select:focus,
+.modal-form .form-input:focus {
+    border-color: var(--principal) !important;
+    box-shadow: 0 0 0 3px var(--principal-dim) !important;
+    outline: none !important;
+}
