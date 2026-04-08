@@ -505,3 +505,9 @@
 .filtros-grupo[hidden] {
     display: none;
 }
+
+.nav-separador {
+    height: 1px;
+    background-color: var(--borde);
+    margin: var(--space-2) var(--space-2);
+}

@@ -31,7 +31,8 @@ function actualizarTitulo() {
     const titulos = {
         inbox: 'Bandeja de Entrada',
         enviados: 'Enviados',
-        detalle: 'Detalle de Mensaje'
+        detalle: 'Detalle de Mensaje',
+        llamada: 'Videollamada'
     };
     const el = document.getElementById('vistaTitulo');
     if (el) el.textContent = titulos[App.vista] ?? 'Bandeja de Entrada';
@@ -59,7 +60,8 @@ function actualizarTopIcon(vista) {
     const iconos = {
         inbox: '📥',
         enviados: '📤',
-        detalle: '📄'
+        detalle: '📄',
+        llamada: '📹'
     };
     const el = document.querySelector('.top-icon');
     if (el) el.textContent = iconos[vista] ?? '📥';

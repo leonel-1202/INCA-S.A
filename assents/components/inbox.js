@@ -18,9 +18,7 @@ async function renderBandeja(usuario) {
     const contenedor = document.getElementById('listaMensaje');
     if (!contenedor) return;
     contenedor.innerHTML = renderCargando();
-
     const mensajes = await getRecibidos();
-
     bindFiltros(usuario, mensajes);
     aplicarFiltro(usuario, mensajes, filtroActivo);
 }
@@ -30,7 +28,6 @@ function bindFiltros(usuario, mensajes) {
         const nuevo = btn.cloneNode(true);
         btn.parentNode.replaceChild(nuevo, btn);
     });
-
     document.querySelectorAll('.btn-filtro').forEach(btn => {
         btn.addEventListener('click', () => {
             filtroActivo = btn.dataset.filtro;
@@ -40,7 +37,6 @@ function bindFiltros(usuario, mensajes) {
             aplicarFiltro(usuario, mensajes, filtroActivo);
         });
     });
-
     document.querySelectorAll('.btn-filtro').forEach(b =>
         b.classList.toggle('activo', b.dataset.filtro === filtroActivo)
     );
@@ -49,27 +45,19 @@ function bindFiltros(usuario, mensajes) {
 function aplicarFiltro(usuario, mensajes, filtro) {
     const contenedor = document.getElementById('listaMensaje');
     if (!contenedor) return;
-
     let filtrados = mensajes;
-
-    if (filtro === 'pendientes') {
-        filtrados = mensajes.filter(m => m.estado === 'pendiente' || m.estado === 'recibido');
-    } else if (filtro === 'aprobados') {
-        filtrados = mensajes.filter(m => m.estado === 'aprobado');
-    } else if (filtro === 'rechazados') {
-        filtrados = mensajes.filter(m => m.estado === 'rechazado');
-    }
+    if (filtro === 'pendientes') filtrados = mensajes.filter(m => m.estado === 'pendiente' || m.estado === 'recibido');
+    else if (filtro === 'aprobados') filtrados = mensajes.filter(m => m.estado === 'aprobado');
+    else if (filtro === 'rechazados') filtrados = mensajes.filter(m => m.estado === 'rechazado');
 
     if (filtrados.length === 0) {
         contenedor.innerHTML = renderVacio('No hay mensajes con ese filtro.');
         return;
     }
-
     contenedor.innerHTML = filtrados
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map(m => renderTarjetaMensaje(m, 'inbox'))
         .join('');
-
     contenedor.querySelectorAll('.mensaje-card').forEach(card => {
         card.addEventListener('click', () => abrirDetalle(card.dataset.id, usuario));
     });
@@ -80,17 +68,14 @@ async function renderEnviados(usuario) {
     if (!contenedor) return;
     contenedor.innerHTML = renderCargando();
     const mensajes = await getEnviados();
-
     if (mensajes.length === 0) {
         contenedor.innerHTML = renderVacio('No has enviado ningún mensaje.');
         return;
     }
-
     contenedor.innerHTML = mensajes
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .map(m => renderTarjetaMensaje(m, 'enviados'))
         .join('');
-
     contenedor.querySelectorAll('.mensaje-card').forEach(card => {
         card.addEventListener('click', () => abrirDetalle(card.dataset.id, usuario, false));
     });
@@ -117,6 +102,9 @@ async function abrirDetalle(id, usuario, puedeMarcarLeido = true) {
         && mensaje.estado !== 'rechazado';
 
     const historial = await getHistorialFormateado(id);
+
+    const participantes = [mensaje.de, mensaje.para].sort().join('-');
+    const nombreSala = `inca-sa-${participantes}`.replace(/[^a-zA-Z0-9-]/g, '-');
 
     contenedor.innerHTML = `
         <div class="detalle-cabeza">
@@ -163,6 +151,30 @@ async function abrirDetalle(id, usuario, puedeMarcarLeido = true) {
                     </div>
                 </div>
             ` : ''}
+
+            <!-- Acciones del documento -->
+            <div class="detalle-acciones-doc">
+                <!-- Botón videollamada -->
+                <button class="btn-llamada" id="btnLlamada" data-sala="${nombreSala}" data-nombre="${usuario.nombre}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="23 7 16 12 23 17 23 7"/>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                    </svg>
+                    Videollamada
+                </button>
+
+                <!-- Botón editar y reenviar -->
+                <button class="btn-reenviar" id="btnReenviar"
+                    data-asunto="${mensaje.asunto}"
+                    data-cuerpo="${encodeURIComponent(mensaje.cuerpo)}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 14 20 9 15 4"/>
+                        <path d="M4 20v-7a4 4 0 0 1 4-4h12"/>
+                    </svg>
+                    Editar y reenviar
+                </button>
+            </div>
+
             ${mostrarBotones ? `
                 <div class="detalle-acciones">
                     <button class="btn-aprobar" id="btnAprobar">
@@ -179,6 +191,7 @@ async function abrirDetalle(id, usuario, puedeMarcarLeido = true) {
                     </button>
                 </div>
             ` : ''}
+
             ${historial.length > 0 ? `
                 <div class="historial-lista">
                     <div class="historial-titulo">Historial de estados</div>
@@ -205,6 +218,20 @@ async function abrirDetalle(id, usuario, puedeMarcarLeido = true) {
     document.getElementById('btnVolver')
         ?.addEventListener('click', () => cambiarVista('inbox'));
 
+    document.getElementById('btnLlamada')
+        ?.addEventListener('click', (e) => {
+            const sala = e.currentTarget.dataset.sala;
+            const nombre = e.currentTarget.dataset.nombre;
+            iniciarLlamada(sala, nombre);
+        });
+
+    document.getElementById('btnReenviar')
+        ?.addEventListener('click', (e) => {
+            const asunto = e.currentTarget.dataset.asunto;
+            const cuerpo = decodeURIComponent(e.currentTarget.dataset.cuerpo);
+            abrirModalReenvio(asunto, cuerpo);
+        });
+
     if (mostrarBotones) {
         document.getElementById('btnAprobar')
             ?.addEventListener('click', () => manejarAprobacion(id, usuario, 'aprobar'));
@@ -213,10 +240,55 @@ async function abrirDetalle(id, usuario, puedeMarcarLeido = true) {
     }
 }
 
+function abrirModalReenvio(asunto, cuerpo) {
+    const overlay = document.getElementById('modalOverlay');
+    if (overlay) overlay.hidden = false;
+
+    const inputAsunto = document.getElementById('msgAsunto');
+    const inputContenido = document.getElementById('msgContenido');
+    const inputPara = document.getElementById('msgPara');
+
+    if (inputAsunto) inputAsunto.value = `RE: ${asunto}`;
+    if (inputContenido) inputContenido.value = `\n\n--- Mensaje original ---\n${cuerpo}`;
+
+    if (inputPara) inputPara.focus();
+}
+
+function iniciarLlamada(sala, nombreUsuario) {
+    cambiarVista('llamada');
+    const contenedor = document.getElementById('vistaLlamada');
+    if (!contenedor) return;
+
+    contenedor.innerHTML = `
+        <div class="llamada-cabeza">
+            <button class="btn-volver" id="btnColgar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                Salir de la llamada
+            </button>
+            <span class="llamada-sala">Sala: ${sala}</span>
+        </div>
+        <div class="llamada-frame">
+            <iframe
+                src="https://meet.jit.si/${sala}#userInfo.displayName=${encodeURIComponent(nombreUsuario)}&config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false"
+                allow="camera; microphone; fullscreen; display-capture"
+                style="width:100%; height:100%; border:none; border-radius: var(--radio-lg);">
+            </iframe>
+        </div>
+    `;
+
+    document.getElementById('btnColgar')
+        ?.addEventListener('click', () => {
+            contenedor.innerHTML = '';
+            cambiarVista('inbox');
+        });
+}
+
 async function manejarAprobacion(mensajeId, usuario, accion) {
-    const btnAprobar  = document.getElementById('btnAprobar');
+    const btnAprobar = document.getElementById('btnAprobar');
     const btnRechazar = document.getElementById('btnRechazar');
-    if (btnAprobar)  btnAprobar.disabled  = true;
+    if (btnAprobar) btnAprobar.disabled = true;
     if (btnRechazar) btnRechazar.disabled = true;
 
     const resultado = accion === 'aprobar'
@@ -224,21 +296,17 @@ async function manejarAprobacion(mensajeId, usuario, accion) {
         : await rechazar(mensajeId);
 
     if (!resultado) {
-        if (btnAprobar) btnAprobar.disabled  = false;
+        if (btnAprobar) btnAprobar.disabled = false;
         if (btnRechazar) btnRechazar.disabled = false;
         return;
     }
-
     await abrirDetalle(mensajeId, usuario, false);
 }
 
 function renderTarjetaMensaje(mensaje, tipo) {
     const esNoLeido = tipo === 'inbox' && !mensaje.leido;
-    const nombre    = tipo === 'inbox'
-        ? getNombreById(mensaje.de)
-        : getNombreById(mensaje.para);
-    const prefijo   = tipo === 'inbox' ? 'De' : 'Para';
-
+    const nombre = tipo === 'inbox' ? getNombreById(mensaje.de) : getNombreById(mensaje.para);
+    const prefijo = tipo === 'inbox' ? 'De' : 'Para';
     return `
         <div class="mensaje-card ${esNoLeido ? 'no-leido' : ''}" data-id="${mensaje._id}">
             <div class="card-avatar">${getIniciales(nombre)}</div>

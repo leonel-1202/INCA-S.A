@@ -591,3 +591,86 @@
     box-shadow: 0 0 0 3px var(--principal-dim) !important;
     outline: none !important;
 }
+
+.vista-llamada-seccion {
+    padding: var(--space-3) !important;
+}
+
+.llamada-contenedor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: var(--space-3);
+}
+
+.llamada-cabeza {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.llamada-sala {
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+}
+
+.llamada-frame {
+    flex: 1;
+    border-radius: var(--radio-lg);
+    overflow: hidden;
+    background-color: var(--color-8);
+    min-height: 0;
+}
+
+.detalle-llamada {
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--borde);
+}
+
+.btn-llamada {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background-color: rgba(88, 101, 242, 0.15);
+    color: var(--principal-claro);
+    border: 1px solid rgba(88, 101, 242, 0.3);
+    border-radius: var(--radio-md);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-llamada:hover {
+    background-color: rgba(88, 101, 242, 0.3);
+    transform: translateY(-1px);
+}
+
+.detalle-acciones-doc {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--borde);
+}
+
+.btn-reenviar {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background-color: rgba(250, 166, 26, 0.15);
+    color: var(--status-pending);
+    border: 1px solid rgba(250, 166, 26, 0.3);
+    border-radius: var(--radio-md);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-reenviar:hover {
+    background-color: rgba(250, 166, 26, 0.3);
+    transform: translateY(-1px);
+}
