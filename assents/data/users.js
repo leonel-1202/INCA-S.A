@@ -10,8 +10,6 @@ export const USUARIOS = [
         canSendTo: ["*"],
         canApprove: true,
         canApproveFrom: [
-            "asesoria-legal",
-            "asesoria-comercial",
             "gerente-general",
             "gerente-sucursal"
         ],
@@ -106,14 +104,12 @@ export const USUARIOS = [
         canSendTo: [
             "gerente-general",
             "depto-compras",
-            "ventas",
-            "deposito"
+            "ventas"
         ],
         canApprove: true,
         canApproveFrom: [
             "depto-compras",
-            "ventas",
-            "deposito"
+            "ventas"
         ],
         avatar: "GL",
         colorRol: "var(--rol-gerente)"
@@ -179,8 +175,7 @@ export const USUARIOS = [
         password: "inca_ventas",
         reportaA: "gerente-logistica",
         canSendTo: [
-            "gerente-logistica",
-            "deposito"
+            "gerente-logistica"
         ],
         canApprove: false,
         canApproveFrom: [],

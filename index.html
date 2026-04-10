@@ -66,6 +66,13 @@
     </div>
 
     <script type="module">
+
+        import { estaLogueado } from './assents/services/auth.service.js';
+        
+        if (estaLogueado()) {
+            window.location.replace('dashboard.html');
+}
+
         import { USUARIOS } from './assents/data/users.js';
         import { login } from './assents/services/auth.service.js';
 
@@ -123,7 +130,7 @@
                 return;
             }
 
-            window.location.href = 'dashboard.html';
+            window.location.replace('dashboard.html');
         });
     </script>
 </body>

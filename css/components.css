@@ -674,3 +674,14 @@
     background-color: rgba(250, 166, 26, 0.3);
     transform: translateY(-1px);
 }
+
+.adjunto-link {
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.adjunto-link:hover {
+    background-color: var(--color-5);
+    text-decoration: none;
+}

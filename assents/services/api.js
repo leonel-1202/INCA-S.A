@@ -1,6 +1,6 @@
 const BASE_URL = '/api';
 
-function getToken() {
+export function getToken() {
     const raw = sessionStorage.getItem('inca_token');
     return raw || null;
 }

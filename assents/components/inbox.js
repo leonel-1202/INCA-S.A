@@ -140,14 +140,19 @@ async function abrirDetalle(id, usuario, puedeMarcarLeido = true) {
                 <div class="detalle-adjuntos">
                     <div class="detalle-adjuntos-label">Adjuntos</div>
                     <div class="lista-adjuntos">
-                        ${mensaje.adjuntos.map(adj => `
-                            <div class="adjunto-chip">
+                        ${mensaje.adjuntos.map(adj => {
+                            const nombre   = typeof adj === 'object' ? adj.original : adj;
+                            const url      = typeof adj === 'object' ? adj.url : null;
+                            return `
+                                <a class="adjunto-chip adjunto-link" ${url ? `href="${url}" download="${nombre}"` : ''} target="_blank">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-                                </svg>
-                                ${adj}
-                            </div>
-                        `).join('')}
+                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                        </svg>
+                    ${nombre}
+                ${url ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>` : ''}
+                </a>
+                    `;
+                    }).join('')}
                     </div>
                 </div>
             ` : ''}
@@ -286,9 +291,9 @@ function iniciarLlamada(sala, nombreUsuario) {
 }
 
 async function manejarAprobacion(mensajeId, usuario, accion) {
-    const btnAprobar = document.getElementById('btnAprobar');
+    const btnAprobar  = document.getElementById('btnAprobar');
     const btnRechazar = document.getElementById('btnRechazar');
-    if (btnAprobar) btnAprobar.disabled = true;
+    if (btnAprobar)  btnAprobar.disabled  = true;
     if (btnRechazar) btnRechazar.disabled = true;
 
     const resultado = accion === 'aprobar'
@@ -296,11 +301,14 @@ async function manejarAprobacion(mensajeId, usuario, accion) {
         : await rechazar(mensajeId);
 
     if (!resultado) {
-        if (btnAprobar) btnAprobar.disabled = false;
+        if (btnAprobar)  btnAprobar.disabled  = false;
         if (btnRechazar) btnRechazar.disabled = false;
         return;
     }
+
     await abrirDetalle(mensajeId, usuario, false);
+    
+    await renderBandeja(usuario);
 }
 
 function renderTarjetaMensaje(mensaje, tipo) {
